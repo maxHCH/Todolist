@@ -41,8 +41,8 @@ var app = new Vue({
             this.cacheTodo = {};
         },
         clearTodo : function () {
+            alert('將清除所有事項');
             this.todo = [];
-            console.log(this.todo);
         }
     },
     computed: {
