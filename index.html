@@ -61,8 +61,8 @@
                         </li>
                     </ul>
                     <div class="card-footer text-secondary text-left bg-light pb-0 d-flex justify-content-between">
-                        <p>尚有幾筆未完成</p>
-                        <a href="javascript:;" class="text-danger">清除全部</a>
+                        <p>尚有 <sapn class="text-danger">{{filterTodo.length}}</sapn> 幾筆未完成</p>
+                        <a href="javascript:;" class="text-danger" @click="clearTodo">清除全部</a>
                     </div>
                 </div>
             </div>

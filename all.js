@@ -39,6 +39,10 @@ var app = new Vue({
             item.title = this.cacheTitle;
             this.cacheTitle = '';
             this.cacheTodo = {};
+        },
+        clearTodo : function () {
+            this.todo = [];
+            console.log(this.todo);
         }
     },
     computed: {
