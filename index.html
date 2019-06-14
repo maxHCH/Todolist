@@ -17,57 +17,55 @@
             今天做什麼？
         </div>
     </header>
-    <div class="container mt-5" id="app">
-        <div class="row justify-content-center">
-            <div class="col-lg-6">
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <label class="input-group-text bg-secondary text-light" for="inputGroupSelect01">待辦事項</label>
-                    </div>
-                    <input type="text" class="form-control" placeholder="你的計畫..." aria-label="你的計畫" v-model="newTodo"
-                        @keyup.enter="addTodo">
-                    <div class="input-group-append">
-                        <button class="btn btn-outline-light " type="button" id="button-addon2"
-                            @click="addTodo">加入</button>
-                    </div>
+    <div id="app" class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="input-group mb-3 mt-4">
+                <div class="input-group-prepend ">
+                    <span class="input-group-text" id="basic-addon1" >新增事項</span>
                 </div>
-                <div class="card text-center bg-secondary border-0">
-                    <div class="card-header bg-secondary">
-                        <ul class="nav nav-tabs card-header-tabs ">
-                            <li class="nav-item ">
-                                <a class="nav-link text-dark" :class="{'active' : visibility == 'all'}" @click.prevent="visibility = 'all'" href="javascript:;">全部</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" :class="{'active' : visibility == 'active'}" @click.prevent="visibility = 'active'" href="javascript:;">未完成</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" :class="{'active' : visibility == 'completed'}" @click.prevent="visibility = 'completed'" href="javascript:;">已完成</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item bg-secondary" v-for="(item,key) in filterTodo" @dblclick="editTodo(item)">
-                            <div class="form-check text-left" v-if="item.id !==cacheTodo.id">
-                                <input class="form-check-input" type="checkbox" value="" :id="item.id"
-                                    v-model="item.computed" >
-                                <label class="form-check-label text-light" :for="item.id" :class="{'completed':item.computed}">
-                                    {{item.title}}
-                                </label>
-                                <button type="button" class="close text-light" aria-label="Close" @click="removeTodo(item)">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <input type="text" class="form-control" v-if="item.id ===cacheTodo.id" v-model="cacheTitle" @keyup.esc="cancelEdit" @keyup.enter="doneTodo(item)">
+                <input type="text" class="form-control" focus v-model="todo" @keyup.enter.prevent="addList" placeholder="準備要做的事項">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-light" @click.prevent="addList" type="button">新增</button>
+                </div>
+            </div>
+            <div class="card text-center bg-light">
+                <div class="card-header">
+                    <ul class="nav nav-tabs card-header-tabs">
+                        <li class="nav-item" >
+                            <a class="nav-link" :class="{ 'active': showActive == 'all'}" @click.prevent="showActive = 'all'" href="javascript:;">全部</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " :class="{ 'active': showActive == 'conduct'}" @click.prevent="showActive = 'conduct'" href="javascript:;">進行中</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" :class="{ 'active': showActive == 'complete'}" @click.prevent="showActive = 'complete'"  href="javascript:;">已完成</a>
                         </li>
                     </ul>
-                    <div class="card-footer text-secondary text-left bg-light pb-0 d-flex justify-content-between">
-                        <p>尚有 <sapn class="text-danger">{{filterTodo.length}}</sapn> 幾筆未完成</p>
-                        <a href="javascript:;" class="text-danger" @click="clearTodo">清除全部</a>
-                    </div>
+                </div>
+                <ul class="list-group list-group-flush text-left" >
+                    <li class="list-group-item" v-for="(list,num) in filter" :key="num" @dblclick.prevent="editList(list)" >
+                        <div class="d-flex" v-if="list.id !== cacheList.id">
+                            <div class="form-check">
+                                <input type="checkbox" v-model="list.check" class="form-check-input" :id="list.id">
+                                <label class="form-check-label" :class="{'completed' : list.check}" :for="list.id">
+                                    {{list.title}}
+                                </label>
+                            </div>
+                                <button type="button" @click.prevent="remove(list)" class="close ml-auto" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <input type="text" class="form-control" v-if="list.id == cacheList.id" v-model="cacheTitle" @keyup.enter.prevent="doneList(list)" @keyup.esc.prevent="canceEdit">
+                    </li>
+                </ul>
+                <div class="card-footer d-flex justify-content-between">
+                    <span>還有筆任務 {{undone}} 未完成</span>
+                    <a href="javascript:;" @click.prevent="cleanList">清除所有任務</a>
+                </div>
                 </div>
             </div>
         </div>
-    </div>
+        
     <style>
         .completed {
             text-decoration: line-through

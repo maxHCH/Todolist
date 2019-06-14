@@ -1,70 +1,84 @@
+
 var app = new Vue({
-    el: '#app',
+    el: "#app",
     data: {
-        newTodo: '',
-        todo: [],
-        visibility: 'all',
-        cacheTodo: [],
-        cacheTitle: ''
+        todo: "",
+        newList: [],
+        showActive: "all",
+        cacheList: {},
+        cacheTitle: ""
     },
     methods: {
-        addTodo: function () {
-            let value = this.newTodo.trim();
-            let timestamp = Math.floor(Date.now());
-            if (!value) {
-                return;
-            }
-            this.todo.push({
-                title: value,
-                id: timestamp,
-                computed: false,
-            })
-            this.newTodo = '';
+        addList() {
+        let timestamp = Math.floor(Date.now());
+        let value = this.todo.trim();
+        if (!value) {
+            return;
+        } else {
+            this.newList.push({
+            id: timestamp,
+            title: value,
+            check: false
+            });
+        }
+        this.todo = "";
         },
-        removeTodo: function (todo) {
-            let vm = this;
-            let delIndex = vm.todo.findIndex(function (item, key) {
-                return todo.id === item.id;
-            })
-            this.todo.splice(delIndex, 1);
+        remove(list) {
+        let vm = this;
+        let indexId = vm.newList.findIndex(function(item, key) {
+            return list.id === item.id;
+        });
+        this.newList.splice(indexId, 1);
         },
-        editTodo: function (item) {
-            this.cacheTodo = item;
-            this.cacheTitle = item.title;
+        editList(list) {
+        this.cacheList = list;
+        this.cacheTitle = list.title;
         },
-        cancelEdit: function () {
-            this.cacheTodo = {};
+        canceEdit() {
+        this.cacheList = {};
         },
-        doneTodo: function (item) {
-            item.title = this.cacheTitle;
-            this.cacheTitle = '';
-            this.cacheTodo = {};
+        doneList(list) {
+        list.title = this.cacheTitle;
+        this.cacheTitle = "";
+        this.cacheList = {};
         },
-        clearTodo : function () {
-            alert('將清除所有事項');
-            this.todo = [];
+        cleanList() {
+        let vm = this;
+        vm.newList = [];
         }
     },
     computed: {
-        filterTodo: function () {
-            let newTodos = [];
-            if (this.visibility == 'all') {
-                return this.todo;
-            } else if (this.visibility == 'active') {
-                this.todo.forEach(function (item) {
-                    if (!item.computed) {
-                        newTodos.push(item);
-                    }
-                })
-                return newTodos;
-            } else if (this.visibility == 'completed') {
-                this.todo.forEach(function (item) {
-                    if (item.computed) {
-                        newTodos.push(item);
-                    }
-                })
-                return newTodos;
+        filter() {
+        if (this.showActive == "all") {
+            return this.newList;
+        } else if (this.showActive == "conduct") {
+            let conductList = [];
+            this.newList.forEach(function(item) {
+            if (!item.check) {
+                conductList.push(item);
             }
+            });
+            return conductList;
+        } else if (this.showActive == "complete") {
+            let completeList = [];
+            this.newList.forEach(function(item) {
+            if (item.check) {
+                completeList.push(item);
+            }
+            });
+            return completeList;
+        }
+        },
+        undone() {
+        let vm = this;
+        let checkFilter = [];
+        vm.newList.forEach(function(item) {
+            if (item.check === false) {
+            checkFilter.push(item);
+            }
+        });
+        return checkFilter.length;
         }
     }
-}) 
+});
+Î
